@@ -1,14 +1,26 @@
 import PySimpleGUI as simpleg
 
-layout = [
-          [simpleg.Text('Please enter your Name, Address, Phone')],
-          [simpleg.Text('Name', size=(15, 1)), simpleg.InputText('name')],
-          [simpleg.Text('Address', size=(15, 1)), simpleg.InputText('address')],
-          [simpleg.Text('Phone', size=(15, 1)), simpleg.InputText('phone')],
-          [simpleg.Submit(), simpleg.Cancel()]
-         ]
+def launch_login():
+    layout = [
+        [simpleg.Text('Please choose a username to chat under.')],
+        [simpleg.Text('Username: ', size=(15, 1)), simpleg.InputText('')],
+        [simpleg.Submit(), simpleg.Cancel()]
+    ]
+    window = simpleg.Window('Login').Layout(layout)
+    button, values = window.Read()
+    user = values[0]
+    window.close()
+    return user
 
-window = simpleg.Window('Simple data entry window').Layout(layout)
-button, values = window.Read()
+def launch_chatbox(user):
+    layout = [
+        [simpleg.Text('%s: ' % user, size=(15, 1)), simpleg.InputText('')],
+        [simpleg.Submit('Send'), simpleg.Cancel()]
+    ]
+    window = simpleg.Window('Chat').Layout(layout)
+    button, values = window.Read()
 
-print(button, values[0], values[1], values[2])
+
+if __name__ == '__main__':
+    user = launch_login()
+    launch_chatbox(user)
