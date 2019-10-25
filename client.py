@@ -1,5 +1,5 @@
 import PySimpleGUI as simpleg
-import socket, os
+from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 
 
@@ -26,15 +26,15 @@ def launch_chatbox(user):   # displays chatbox with custom user from login, call
     while True:
         event, values = window.Read()
         if event in (None, 'Cancel'):
+            send_message("[quit]")  # sends out QUIT message from our client
             break
         else:
-            send_message(values[0])   # event sends out message from our client with details
+            send_message(values[0])   # SUBMIT sends out message from our client
     window.Close()
 
 
 def send_message(message_to_send):    # send_message transmits client username and message
     connection.send(bytes(message_to_send, "utf8"))
-    print("sending: " + message_to_send)
 
 
 def receive_message():
@@ -42,19 +42,23 @@ def receive_message():
         try:
             received_msg = connection.recv(BUFFERSIZE).decode("utf8")
             print(received_msg)
-        except OSError:  # Possibly client has left the chat.
+        except OSError:  # client left
             break
 
 
+# socket info
 TCP_IP = "127.0.0.1"
 TCP_PORT = 33001
 TCP_ADDRESS = (TCP_IP, TCP_PORT)
 BUFFERSIZE = 1024
 
-user = launch_login()
-connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+user = launch_login()   # get user from login window
+
+connection = socket(AF_INET, SOCK_STREAM)  # init socket
 connection.connect(TCP_ADDRESS)
-connection.send(bytes(user, "utf8"))
-receive_thread = Thread(target=receive_message)
+connection.send(bytes(user, "utf8"))    # send name when connected
+
+receive_thread = Thread(target=receive_message)     # start thread for receiving messages
 receive_thread.start()
-launch_chatbox(user)
+
+launch_chatbox(user)    # start chatbox gui under client username

@@ -11,7 +11,7 @@ def accept_incoming_connections():  # makes new thread for each client
         Thread(target=handle_client, args=(client,)).start()
 
 
-def handle_client(client):      # send chat setup info and recieve name, broadcast messages
+def handle_client(client):      # send chat setup info and receive name, broadcast messages
     name = client.recv(BUFFERSIZE).decode("utf8")
     welcome = ("Welcome {0}! If you ever want to quit, type [quit] to exit.".format(name))
     client.send(bytes(welcome, "utf8"))
@@ -20,16 +20,23 @@ def handle_client(client):      # send chat setup info and recieve name, broadca
     clients[client] = name
 
     while True:
-        msg = client.recv(BUFFERSIZE)
-        if msg == bytes("[quit]", "utf8"):
-            print("error")
+        raw_msg = client.recv(BUFFERSIZE)
+        msg = raw_msg.decode("utf8")
+        if "[quit]" in msg:     # safely deletes client
+            print("[quit] called")
             client.send(bytes("[quit]", "utf8"))
             client.close()
             del clients[client]
             broadcast_to_clients("{0} has left the chat.".format(name))
             break
+        if "[who]" in msg:  # prints list of clients
+            print("[who] called")
+            constructed_who_message = "[who]: "
+            for client in clients:
+                constructed_who_message += clients[client] + " "
+            client.send(bytes(constructed_who_message, "utf8"))     # send message right back
         else:
-            broadcast_to_clients(msg.decode("utf8"), name)
+            broadcast_to_clients(msg, name)
 
 
 def broadcast_to_clients(message, user=""):     # send message to all clients
@@ -43,12 +50,13 @@ def broadcast_to_clients(message, user=""):     # send message to all clients
 clients = {}
 addresses = {}
 
+# socket info
 TCP_IP = "127.0.0.1"
 TCP_PORT = 33001
 TCP_ADDRESS = (TCP_IP, TCP_PORT)
 BUFFERSIZE = 1024
 
-server = socket(AF_INET, SOCK_STREAM)
+server = socket(AF_INET, SOCK_STREAM)   # init socket
 server.bind(TCP_ADDRESS)
 
 if __name__ == "__main__":
