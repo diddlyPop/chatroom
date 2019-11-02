@@ -1,3 +1,10 @@
+"""
+server.py
+Kyle Guss
+
+chatroom server
+"""
+
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 

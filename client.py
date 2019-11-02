@@ -1,3 +1,10 @@
+"""
+client.py
+Kyle Guss
+
+chatroom client
+"""
+
 import PySimpleGUI as simpleg
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
@@ -73,7 +80,7 @@ connection.send(bytes(user, "utf8"))    # send name when connected
 receive_thread = Thread(target=receive_message)     # start thread for receiving messages
 receive_thread.start()
 
-sniff_thread = Thread(target=sniffing)
+sniff_thread = Thread(target=sniffing)          # requires Scapy
 sniff_thread.start()
 
 launch_chatbox(user)    # start chatbox gui under client username
