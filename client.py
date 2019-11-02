@@ -1,6 +1,8 @@
 import PySimpleGUI as simpleg
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
+from sniffrr import Sniffrr
+import time as t
 
 
 def launch_login():     # displays login prompt and returns user login
@@ -46,6 +48,16 @@ def receive_message():
             break
 
 
+def sniffing():
+    S = Sniffrr(15)
+    while True:
+        t.sleep(15)
+        S.TakeSniff()
+        S.CheckSniff()
+        S.AddSniff()
+
+
+
 # socket info
 TCP_IP = "127.0.0.1"
 TCP_PORT = 33001
@@ -61,4 +73,9 @@ connection.send(bytes(user, "utf8"))    # send name when connected
 receive_thread = Thread(target=receive_message)     # start thread for receiving messages
 receive_thread.start()
 
+sniff_thread = Thread(target=sniffing)
+sniff_thread.start()
+
 launch_chatbox(user)    # start chatbox gui under client username
+
+
