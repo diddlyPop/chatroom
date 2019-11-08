@@ -50,10 +50,15 @@ def handle_client(client):      # send chat setup info and receive name, broadca
 
 def broadcast_to_clients(message, user=""):     # send message to all clients
     for sock in clients:
-        if user == "":
-            sock.send(bytes(message, "utf8"))
-        else:
-            sock.send(bytes("{0}: {1}".format(user, message), "utf8"))
+        try:
+            if user == "":
+                sock.send(bytes(message, "utf8"))
+            else:
+                sock.send(bytes("{0}: {1}".format(user, message), "utf8"))
+        except Exception as e:
+            del clients[sock]
+            pass
+
 
 
 names = []
