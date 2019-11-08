@@ -3,6 +3,10 @@ python chatroom displaying networking and communications knowledge
 
 requires python3, PySimpleGui, scapy+npcap (if using sniffrr module)
 
+- clone this directory
+- pip3 install PySimpleGui
+- run client.py
+
 currently:
 - uses tcp connections to transmit messages
 - chat server waits for connections
