@@ -30,7 +30,10 @@ def handle_client(client):      # send chat setup info and receive name, broadca
     clients[client] = name
 
     while True:
-        msg = client.recv(BUFFERSIZE).decode("utf8")
+        try:
+            msg = client.recv(BUFFERSIZE).decode("utf8")
+        except OSError:  # client left
+            break
         if "[quit]" in msg:     # safely deletes client
             client.send(bytes("[quit]", "utf8"))
             client.close()

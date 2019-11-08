@@ -24,7 +24,7 @@ def launch_login(retry):     # displays login prompt and returns user login
     window = simpleg.Window('Login').Layout(layout)
     event, values = window.Read()
     user = values[0]
-    window.Close()
+    window.close()
     return user
 
 
@@ -42,7 +42,7 @@ def launch_chatbox(user):   # displays chatbox with custom user from login, call
             break
         else:
             send_message(values[0])   # SUBMIT sends out message from our client
-    window.Close()
+    window.close()
 
 
 def send_message(message_to_send):    # send_message transmits client username and message
@@ -88,7 +88,7 @@ while user_confirm == "DENY":
     user_confirm = connection.recv(BUFFERSIZE).decode("utf8")
 
 
-receive_thread = Thread(target=receive_message)     # start thread for receiving messages
+receive_thread = Thread(target=receive_message, daemon=True)     # start thread for receiving messages
 receive_thread.start()
 
 #sniff_thread = Thread(target=sniffing)          # requires Scapy
