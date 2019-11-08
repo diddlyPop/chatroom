@@ -8,7 +8,7 @@ chatroom client
 import PySimpleGUI as simpleg
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
-from sniffrr import Sniffrr
+#from sniffrr import Sniffrr
 import time as t
 
 
@@ -58,13 +58,13 @@ def receive_message():
             break
 
 
-def sniffing():
-    S = Sniffrr(15)
-    while True:
-        t.sleep(15)
-        S.TakeSniff()
-        S.CheckSniff()
-        S.AddSniff()
+# def sniffing():
+#     S = Sniffrr(15)
+#     while True:
+#         t.sleep(15)
+#         S.TakeSniff()
+#         S.CheckSniff()
+#         S.AddSniff()
 
 
 
