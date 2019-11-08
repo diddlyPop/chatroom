@@ -12,16 +12,19 @@ from sniffrr import Sniffrr
 import time as t
 
 
-def launch_login():     # displays login prompt and returns user login
+def launch_login(retry):     # displays login prompt and returns user login
+    login_text = "Please choose a username to chat under."
+    if retry:
+        login_text = "Username is taken. Choose a new name."
     layout = [
-        [simpleg.Text('Please choose a username to chat under.')],
+        [simpleg.Text(login_text)],
         [simpleg.Text('Username: ', size=(15, 1)), simpleg.InputText('')],
-        [simpleg.Submit(), simpleg.Cancel()]
+        [simpleg.Submit(), simpleg.Quit()]
     ]
     window = simpleg.Window('Login').Layout(layout)
     event, values = window.Read()
     user = values[0]
-    window.close()
+    window.Close()
     return user
 
 
@@ -29,12 +32,12 @@ def launch_chatbox(user):   # displays chatbox with custom user from login, call
     layout = [
         [simpleg.Output(size=(80, 20), background_color="black", text_color="white")],
         [simpleg.Text('%s: ' % user, size=(15, 1)), simpleg.InputText('', do_not_clear=False)],
-        [simpleg.Submit('Send'), simpleg.Cancel()]
+        [simpleg.Submit('Send'), simpleg.Quit()]
     ]
     window = simpleg.Window('Chat').Layout(layout)
     while True:
         event, values = window.Read()
-        if event in (None, 'Cancel'):
+        if event in (None, 'Quit'):
             send_message("[quit]")  # sends out QUIT message from our client
             break
         else:
@@ -66,22 +69,30 @@ def sniffing():
 
 
 # socket info
-TCP_IP = "127.0.0.1"
+TCP_IP = "167.71.156.224"
 TCP_PORT = 33001
 TCP_ADDRESS = (TCP_IP, TCP_PORT)
 BUFFERSIZE = 1024
 
-user = launch_login()   # get user from login window
+user = launch_login(False)   # get user from login window
 
 connection = socket(AF_INET, SOCK_STREAM)  # init socket
 connection.connect(TCP_ADDRESS)
 connection.send(bytes(user, "utf8"))    # send name when connected
 
+user_confirm = connection.recv(BUFFERSIZE).decode("utf8")
+while user_confirm == "DENY":
+    print("Name in use: ( {} ) ".format(user_confirm))
+    user = launch_login(True)
+    connection.send(bytes(user, "utf8"))  # send name when connected
+    user_confirm = connection.recv(BUFFERSIZE).decode("utf8")
+
+
 receive_thread = Thread(target=receive_message)     # start thread for receiving messages
 receive_thread.start()
 
-sniff_thread = Thread(target=sniffing)          # requires Scapy
-sniff_thread.start()
+#sniff_thread = Thread(target=sniffing)          # requires Scapy
+#sniff_thread.start()
 
 launch_chatbox(user)    # start chatbox gui under client username
 
