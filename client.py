@@ -9,7 +9,6 @@ import PySimpleGUI as simpleg
 from socket import AF_INET, socket, SOCK_STREAM
 from threading import Thread
 #from sniffrr import Sniffrr
-import time as t
 
 
 def launch_login(retry):     # displays login prompt and returns user login
