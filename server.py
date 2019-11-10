@@ -37,7 +37,6 @@ def handle_client(client):      # send chat setup info and receive name, broadca
         except OSError:  # client left
             break
         if "/quit" in msg:     # safely deletes client
-            client.send(bytes("/quit", "utf8"))
             client.close()
             del clients[client]
             names.remove(name)
