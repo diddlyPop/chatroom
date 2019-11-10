@@ -18,10 +18,12 @@ def accept_incoming_connections():  # makes new thread for each client
 
 
 def handle_client(client):      # send chat setup info and receive name, broadcast messages
-    name = client.recv(BUFFERSIZE).decode("utf8")
-    while name in names:
+    login = client.recv(BUFFERSIZE).decode("utf8")
+    name, token = login.split('-')
+    while name in names or AUTH_TOKEN not in token:
         client.send(bytes("DENY", "utf8"))
-        name = client.recv(BUFFERSIZE).decode("utf8")
+        login = client.recv(BUFFERSIZE).decode("utf8")
+        name, token = login.split('-')
     client.send(bytes("ACCEPT", "utf8"))
     names.append(name)
 
@@ -34,16 +36,22 @@ def handle_client(client):      # send chat setup info and receive name, broadca
             msg = client.recv(BUFFERSIZE).decode("utf8")
         except OSError:  # client left
             break
-        if "[quit]" in msg:     # safely deletes client
-            client.send(bytes("[quit]", "utf8"))
+        if "/quit" in msg:     # safely deletes client
+            client.send(bytes("/quit", "utf8"))
             client.close()
             del clients[client]
             names.remove(name)
             broadcast_to_clients("{0} has left the chat.".format(name))
             break
-        if "[who]" in msg:  # prints list of clients
-            print("[who] called")
+        elif "/who" in msg:  # prints list of clients
+            print("/who called")
             client.send(bytes(str(names), "utf8"))     # send message right back
+        elif "/help" in msg:
+            print("help called")
+            client.send(bytes(str(commands), "utf8"))  # send message right back
+        elif len(msg) > 100:
+            print("message size too big")
+            client.send(bytes("Message too large", "utf8"))  # send message right back
         else:
             broadcast_to_clients(msg, name)
 
@@ -64,12 +72,15 @@ def broadcast_to_clients(message, user=""):     # send message to all clients
 names = []
 clients = {}
 addresses = {}
-
+commands = ["/help", "/who", "/quit"]
 # socket info
 TCP_IP = "167.71.156.224"
+LOCAL_IP = "127.0.0.1"
 TCP_PORT = 33001
-TCP_ADDRESS = (TCP_IP, TCP_PORT)
+TCP_ADDRESS = (LOCAL_IP, TCP_PORT)
+AUTH_TOKEN = "1109"
 BUFFERSIZE = 1024
+
 
 server = socket(AF_INET, SOCK_STREAM)   # init socket
 server.bind(TCP_ADDRESS)
