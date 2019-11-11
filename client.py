@@ -60,8 +60,9 @@ def receive_message():
 def printcolor(sender, message):
     back_color = "black"
     try:
-        sender.lower()
-        # TODO generate random color from 'colors' list
+        sender = sender.lower()
+        color = ord(sender) - 97
+        back_color = colors[color]
     except:
         back_color = "black"
     txt = window_main.FindElement("protocol").Widget
@@ -87,7 +88,7 @@ TCP_ADDRESS = (TCP_IP, TCP_PORT)
 AUTH_TOKEN = "1111"
 BUFFERSIZE = 1024
 
-colors = ["black", "red", "yellow", "darkblue"]
+colors = ["black", "red", "darkyellow", "darkblue"]
 
 user = launch_login(False)   # get user from login window
 
@@ -101,7 +102,7 @@ connection.send(bytes(login, "utf8"))    # send name when connected
 user_confirm = connection.recv(BUFFERSIZE).decode("utf8")
 
 while user_confirm != "ACCEPT":
-    print("Name in use: ( {} ) ".format(user_confirm))
+    print("Name in use: ( {} ) or version ( {} ) out-of-date".format(user_confirm, AUTH_TOKEN))
     user = launch_login(True)
     login = "{}-{}".format(user, AUTH_TOKEN)
     connection.send(bytes(login, "utf8"))  # send name when connected
