@@ -91,7 +91,8 @@ user_confirm = connection.recv(BUFFERSIZE).decode("utf8")
 while user_confirm != "ACCEPT":
     print("Name in use: ( {} ) ".format(user_confirm))
     user = launch_login(True)
-    connection.send(bytes(user, "utf8"))  # send name when connected
+    login = "{}-{}".format(user, AUTH_TOKEN)
+    connection.send(bytes(login, "utf8"))  # send name when connected
     user_confirm = connection.recv(BUFFERSIZE).decode("utf8")
 
 receive_thread = Thread(target=receive_message, daemon=True)     # start thread for receiving messages
