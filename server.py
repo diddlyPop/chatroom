@@ -57,7 +57,8 @@ def handle_client(client):      # send chat setup info and receive name, broadca
 
 def broadcast_to_clients(message, user=""):     # send message to all clients
     try:
-        for sock in clients:
+        clients_copy = clients
+        for sock in clients_copy:
             try:
                 if user == "":
                     sock.send(bytes(message, "utf8"))

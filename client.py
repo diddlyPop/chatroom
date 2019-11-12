@@ -24,6 +24,8 @@ def launch_login(retry):     # displays login prompt and returns user login
     ]
     window = sg.Window('Login').Layout(layout)
     event, values = window.Read()
+    if values[0] is None:
+        exit()
     user = values[0]
     window.close()
     return user
@@ -88,7 +90,7 @@ TCP_ADDRESS = (TCP_IP, TCP_PORT)
 AUTH_TOKEN = "1111"
 BUFFERSIZE = 1024
 
-colors = ["black", "red", "darkyellow", "darkblue"]
+colors = ["black", "red", "green", "darkblue"]
 
 user = launch_login(False)   # get user from login window
 
