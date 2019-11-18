@@ -19,6 +19,8 @@ TCP_ADDRESS = (TCP_IP, TCP_PORT)
 AUTH_TOKEN = "1111"
 BUFFERSIZE = 1024
 
+sg.change_look_and_feel("DarkAmber")
+
 
 class Client:
 
@@ -36,7 +38,6 @@ class Client:
                                                      border_width=0)]
         ]
         self.window_main = sg.Window('Chat').Layout(self.layout_main)
-        self.launch_chatbox()
 
     def __setup_flow(self):
         self.launch_login(False)
@@ -60,17 +61,17 @@ class Client:
         login_text = "Please choose a username to chat under."
         if retry:
             login_text = "Username is taken or client is out-of-date."
-        layout = [
+        layout_login = [
             [sg.Text(login_text)],
             [sg.Text('Username: ', size=(15, 1)), sg.InputText('')],
             [sg.Submit(), sg.Quit()]
         ]
-        window = sg.Window('Login').Layout(layout)
-        event, values = window.Read()
+        window_login = sg.Window('Login').Layout(layout_login)
+        event, values = window_login.Read()
         if values[0] is None:
             exit()
         self.user = values[0]
-        window.close()
+        window_login.close()
 
     def launch_chatbox(self):  # displays chatbox with custom user from login, calls send_message
         while True:
@@ -128,6 +129,7 @@ class Client:
 
 
 if __name__ == "__main__":
-    c = Client()
+    C = Client()
+    C.launch_chatbox()
 
 
