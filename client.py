@@ -34,7 +34,7 @@ class Client:
             [sg.Multiline("", key="protocol", autoscroll=True, size=(80, 20))],
             [sg.Text('%s: ' % self.user, size=(15, 1)), sg.InputText('', do_not_clear=False)],
             [sg.Submit('Send'), sg.Quit(), sg.Button("dog", button_color=sg.TRANSPARENT_BUTTON,
-                                                     image_filename="dog.png", image_size=(50, 50), image_subsample=2,
+                                                     image_filename="sprites/dog.png", image_size=(50, 50), image_subsample=2,
                                                      border_width=0)]
         ]
         self.window_main = sg.Window('Chat').Layout(self.layout_main)
