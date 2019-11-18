@@ -80,8 +80,8 @@ class Session:
 layout = [[sg.Text('YAHTZEE - PySimpleGUI + PyGame')],
           [sg.Graph(GAME_SIZE, (0, 0), GAME_SIZE,
                     background_color='lightgreen', key='-GRAPH-')],
-          [sg.Button(button_text=" 1 "), sg.Button(button_text=" 2 "),
-           sg.Button(button_text=" 3 "), sg.Button(button_text=" 4 "), sg.Button(button_text=" 5 ")],
+          [sg.Button(button_text="1"), sg.Button(button_text="2"),
+           sg.Button(button_text="3"), sg.Button(button_text="4"), sg.Button(button_text="5")],
           [sg.Submit("Reroll"), sg.Exit()]]
 
 window = sg.Window('Yahtzee Game using PySimpleGUI and PyGame',
