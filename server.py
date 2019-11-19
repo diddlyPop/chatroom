@@ -15,6 +15,7 @@ TCP_PORT = 33001
 TCP_ADDRESS = (TCP_IP, TCP_PORT)
 AUTH_TOKEN = "1111"
 BUFFERSIZE = 1024
+SERVER_TITLE = "S@@@"
 
 
 class Server:
@@ -41,51 +42,63 @@ class Server:
             Thread(target=self.handle_client, args=(client,)).start()
 
     def handle_client(self, client):  # send chat setup info and receive name, broadcast messages
-        login = client.recv(BUFFERSIZE).decode("utf8")
+        raw = client.recv(BUFFERSIZE).decode("utf8")
+        args = raw.split('@@@')
+        login = args[1]
         name, token = login.split('-')
         while name in self.names or AUTH_TOKEN not in token:
             client.send(bytes("DENY", "utf8"))
-            login = client.recv(BUFFERSIZE).decode("utf8")
+            raw = client.recv(BUFFERSIZE).decode("utf8")
+            args = raw.split('@@@')
+            login = args[1]
             name, token = login.split('-')
         client.send(bytes("ACCEPT", "utf8"))
         self.names.append(name)
 
         user_joined_message = ("{0} has joined the chat!".format(name))
-        self.broadcast_to_clients(user_joined_message)
+        self.broadcast_to_clients(user_joined_message, title="S")
         self.clients[client] = name
 
         while True:
             try:
-                msg = client.recv(BUFFERSIZE).decode("utf8")
+                raw = client.recv(BUFFERSIZE).decode("utf8")
+                args = raw.split('@@@')
+                msg = args[1]
             except OSError:  # client left
                 break
             if "/quit" in msg:  # safely deletes client
                 client.close()
                 del self.clients[client]
                 self.names.remove(name)
-                self.broadcast_to_clients("{0} has left the chat.".format(name))
+                self.broadcast_to_clients(SERVER_TITLE+"{0} has left the chat.".format(name))
                 break
             elif "/who" in msg:  # prints list of clients
                 print("/who called")
-                client.send(bytes(str(self.names), "utf8"))  # send message right back
+                client.send(bytes(SERVER_TITLE+str(self.names), "utf8"))  # send message right back
             elif "/help" in msg:
                 print("help called")
-                client.send(bytes(str(self.commands), "utf8"))  # send message right back
+                client.send(bytes(SERVER_TITLE+str(self.commands), "utf8"))  # send message right back
             elif len(msg) > 100:
                 print("message size too big")
-                client.send(bytes("Message too large", "utf8"))  # send message right back
+                client.send(bytes(SERVER_TITLE+"Message too large", "utf8"))  # send message right back
             else:
-                self.broadcast_to_clients(msg, name)
+                self.broadcast_to_clients(msg, name, args[0])
 
-    def broadcast_to_clients(self, message, user=""):  # send message to all clients
+    def broadcast_to_clients(self, message, user=None, title=None):  # send message to all clients
+        if user is None:
+            user = ""
+        if title is None:
+            title = "N"
+        title = title + "@@@"
+
         try:
             clients_copy = self.clients
             for sock in clients_copy:
                 try:
                     if user == "":
-                        sock.send(bytes(message, "utf8"))
+                        sock.send(bytes(title+message, "utf8"))
                     else:
-                        sock.send(bytes("{0}: {1}".format(user, message), "utf8"))
+                        sock.send(bytes("{0}{1}: {2}".format(title, user, message), "utf8"))
                 except Exception as e:
                     del self.clients[sock]
                     pass
