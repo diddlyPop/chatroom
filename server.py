@@ -13,7 +13,7 @@ TCP_IP = "167.71.156.224"
 LOCAL_IP = "127.0.0.1"
 TCP_PORT = 33001
 TCP_ADDRESS = (TCP_IP, TCP_PORT)
-AUTH_TOKEN = "1119"
+AUTH_TOKEN = "1120"
 BUFFERSIZE = 1024
 SERVER_TITLE = "S@@@"
 
@@ -60,13 +60,21 @@ class Server:
         self.clients[client] = name
 
         while True:
+            toobig = False
             try:
                 raw = client.recv(BUFFERSIZE).decode("utf8")
-                args = raw.split('@@@')
-                msg = args[1]
+                if len(raw) > 250:
+                    toobig = True
+                else:
+                    args = raw.split('@@@')
+                    msg = args[1]
             except OSError:  # client left
                 break
-            if "/quit" in msg:  # safely deletes client
+            if toobig:
+                toobig = False
+                print("message size too big")
+                client.send(bytes(SERVER_TITLE + "Message too large", "utf8"))  # send message right back
+            elif "/quit" in msg:  # safely deletes client
                 client.close()
                 del self.clients[client]
                 self.names.remove(name)
@@ -78,9 +86,6 @@ class Server:
             elif "/help" in msg:
                 print("help called")
                 client.send(bytes(SERVER_TITLE+str(self.commands), "utf8"))  # send message right back
-            elif len(msg) > 100:
-                print("message size too big")
-                client.send(bytes(SERVER_TITLE+"Message too large", "utf8"))  # send message right back
             else:
                 self.broadcast_to_clients(msg, name, args[0])
 
