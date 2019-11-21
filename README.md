@@ -3,9 +3,10 @@ python chatroom displaying networking and communications knowledge
 
 requires python3, PySimpleGui, scapy+npcap (if using sniffrr module)
 
-- clone this directory
-- pip3 install PySimpleGui
-- run client.py
+- git clone https://www.github.com/diddlypop/chatroom.git
+- cd chatroom
+- pip install -r requirements.txt
+- python3 client.py
 
 ![](chat.gif)
 
