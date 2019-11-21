@@ -1,6 +1,9 @@
 # chatroom
 python chatroom displaying networking and communications knowledge
 
+slides for this program:
+https://docs.google.com/presentation/d/1IEoo6ymZyRkoV2EktOFvCBVUxLNVnQsUsKIv519oBHc/edit?usp=sharing
+
 requires python3, PySimpleGui, scapy+npcap (if using sniffrr module)
 
 - git clone https://www.github.com/diddlypop/chatroom.git
