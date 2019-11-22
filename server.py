@@ -70,8 +70,10 @@ class Server:
                     args = raw.split('@@@')
                     msg = args[1]
             except OSError:  # client left
+                del self.clients[client]
                 break
             except ValueError:
+                del self.clients[client]
                 break
             if toobig:
                 toobig = False
