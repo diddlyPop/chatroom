@@ -36,8 +36,8 @@ class Client:
             [sg.Text('%s: ' % self.user, size=(15, 1)), sg.InputText('', do_not_clear=False)],
             [sg.Submit('Send'), sg.Quit(), sg.Button("dog", button_color=sg.TRANSPARENT_BUTTON,
                                                      image_filename="sprites/dog.png", image_size=(25, 25), image_subsample=5,
-                                                     border_width=0),
-                                           sg.Button("b/w")]    # TODO reduced colors - black/white/red mode
+                                                     border_width=0)
+                                           ]    # TODO reduced colors - black/white/red mode
         ]
         self.window_main = sg.Window('Chat').Layout(self.layout_main)
 

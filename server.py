@@ -71,6 +71,8 @@ class Server:
                     msg = args[1]
             except OSError:  # client left
                 break
+            except ValueError:
+                break
             if toobig:
                 toobig = False
                 print("message size too big")
