@@ -8,7 +8,7 @@ requires python3, PySimpleGui, scapy+npcap (if using sniffrr module)
 
 - git clone https://www.github.com/diddlypop/chatroom.git
 - cd chatroom
-- pip install -r requirements.txt
+- pip3 install -r requirements.txt
 - python3 client.py
 
 ![](chat.gif)
