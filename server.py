@@ -78,7 +78,7 @@ class Server:
                 client.close()
                 del self.clients[client]
                 self.names.remove(name)
-                self.broadcast_to_clients(SERVER_TITLE+"{0} has left the chat.".format(name))
+                self.broadcast_to_clients("{0} has left the chat.".format(name))
                 break
             elif "/who" in msg:  # prints list of clients
                 print("/who called")

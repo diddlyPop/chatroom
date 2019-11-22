@@ -35,7 +35,7 @@ class Client:
             [sg.Multiline("", background_color="black", key="protocol", autoscroll=True, size=(80, 20))],
             [sg.Text('%s: ' % self.user, size=(15, 1)), sg.InputText('', do_not_clear=False)],
             [sg.Submit('Send'), sg.Quit(), sg.Button("dog", button_color=sg.TRANSPARENT_BUTTON,
-                                                     image_filename="sprites/dog.png", image_size=(50, 50), image_subsample=2,
+                                                     image_filename="sprites/dog.png", image_size=(25, 25), image_subsample=5,
                                                      border_width=0),
                                            sg.Button("b/w")]    # TODO reduced colors - black/white/red mode
         ]
@@ -142,7 +142,7 @@ class Client:
 
     # deploys thread for sniffing unencrypted local network traffic
     # saves photos from this sniffed data into an assets folder on the host computer
-    # message protocol can be altered to retransmit image data
+    # message protocol can be altered to retransmit image data/who
 # def sniffing():
 #     S = Sniffrr(15)
 #     while True:
