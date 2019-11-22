@@ -37,7 +37,7 @@ class Server:
     def accept_incoming_connections(self):  # makes new thread for each client
         while True:
             client, client_address = self.server.accept()
-            print("{0}:{1} has connected".format(client, client_address))
+            print("{} attempted to connect".format(client_address))
             self.addresses[client] = client_address
             Thread(target=self.handle_client, args=(client,)).start()
 
@@ -56,6 +56,7 @@ class Server:
         self.names.append(name)
 
         user_joined_message = ("{0} has joined the chat!".format(name))
+        print("{} connected as: {}".format(self.addresses[client], name))
         self.broadcast_to_clients(user_joined_message, title="S")
         self.clients[client] = name
 
